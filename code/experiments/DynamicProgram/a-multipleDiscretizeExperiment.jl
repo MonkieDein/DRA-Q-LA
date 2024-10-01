@@ -40,10 +40,10 @@ for T in [100]
             plot(title = ( T==-1 ? "infinite" : "$T")*" horizon policy evaluation $domain", xlabel = "Quantile level", ylabel = "Quantile Value",
             legend=:outerright,xlim=(0,1)) # 
             for (ρ, result) in results
-                scatter!(result["α"],result["values"],ms=6, label=ρ,alpha=0.5)
+                scatter!(result["α"],result["values"],ms=6, label="π"*ifelse(ρ=="VaR","̲","̄")*" performance",alpha=0.5)
             end
             for (ρ, result) in bound[domain]
-                plot!(result["α"],result["values"], label=ρ*"bound")
+                plot!(result["α"],result["values"], label="q"*ifelse(ρ=="VaR","̲","̄")*"ᵈ")
             end
             savefig(check_path("fig/mc_test_result/$domain/$T/discretize/$domain-$T-$lQl.pdf"))
         end

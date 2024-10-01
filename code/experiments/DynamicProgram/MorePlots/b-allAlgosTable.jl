@@ -26,6 +26,8 @@ EVaRObj = Objective(ρ="EVaR", pars=parEval,parEval=parEval,T = T) # EVaR
 objs = [ VaRObj ; nVaRObj;distVaRObj ; meanObj;ChowObj ;EVaRObj  ]  #   
 
 # test
+MultiEvals = load_jld("experiment/run/test/multi_evals_$T.jld2")
+ret = MultiEvals["$lQl"]["ret"]
 domains = [domain for (domain, results) in ret]
 # generating plots axis 
 output_df = DataFrame(domain = domains)
@@ -34,9 +36,6 @@ eval_risk = 0.25 # risk of interest to for table generation
 # obtained the upper and lower bound of ̲π amd obtain the performance of ̄π
 bound = MultiEvals["$lQl"]["bound"]
 output_df[!,"\$\\bar{q}^\\discretized\$"] = round.([VaR(distribution(bound[domain]["VaR_over"]["values"]),[eval_risk])[1]  for domain in domains], digits=2)
-MultiEvals = load_jld("experiment/run/test/multi_evals_$T.jld2")
-ret = MultiEvals["$lQl"]["ret"]
-output_df[!,"\$\\bar{\\pi}\$"] = round.([ret[domain]["VaR_over"]["values"][ret[domain]["VaR_over"]["α"] .== eval_risk][1]  for domain in domains], digits=2)
 output_df[!,"\$\\ushort{q}^\\discretized\$"] = round.([VaR(distribution(bound[domain]["VaR"]["values"]),[eval_risk])[1]  for domain in domains], digits=2)
 # Evaluate the performance of all the algorithms with VaR metric
 risk_name, eval_metric = ("VaR",VaR)

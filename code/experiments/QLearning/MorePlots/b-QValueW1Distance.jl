@@ -56,7 +56,7 @@ for d in domains
         W1_distance[domain][lr_setting]["distance"] = dist
         plot!(W1_distance[domain][lr_setting]["step"], dist, label="κ = $(lr_setting[3:end])", lw=2)
     end
-    savefig(check_path("fig/mc_test_result/all_algs/Q_learning_error/$T/$domain.pdf"))
+    savefig(check_path("fig/mc_test_result/all_algs/Q_learning_error/$domain.pdf"))
 end
 
 

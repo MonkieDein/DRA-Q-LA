@@ -4,17 +4,32 @@ Preliminary: Install Julia and set the folder of this file as directory
 ---
 
 ## Order to run the code
-(1) code/others/csv2MDP.jl : Turn MDP domains CSV into MDP objects.
-(2) code/experiments/DynamicProgram/a-multipleDiscretizeExperiment.jl :
-Run VaR DP for multiple discretizations.
-(3) code/experiments/DynamicProgram/b-allAlgorithmsComparison.jl :
-Run all other algorithms and compare their performance with VaR-DP.
-(4) code/experiments/QLearning/a-qLearning.jl :
-Train soft quantile qLearning for different parameter of k.
-(5) code/experiments/QLearning/b-evaluateQlearningPolicies.jl :
-Evaluate qLearning and compare its value function and policy performance against DP variants.
-(6) code/experiments/QLearning/MorePlots/b-QValueW1Distance.jl :
-Compute the W1-Distance between qLearning and DP value function.
+
+(1) ```julia .\code\others\csv2MDP.jl``` : Turn MDP domains CSV into MDP objects. (Create ./experiment/domina/MDP/)
+
+(2) ```julia --threads 8 .\code\experiments\DynamicProgram\a-multipleDiscretizeExperiment.jl``` :
+Run VaR DP for multiple discretizations. (Create ./fig/[domain_name]/)
+
+(3) ```julia --threads 8 .\code\experiments\DynamicProgram\b-allAlgorithmsComparison.jl``` :
+Run all other algorithms and compare their performance with VaR-DP. (Create ./fig/all_algs/VaR/)
+
+(4) ```julia --threads 8 .\code\experiments\QLearning\a-qLearning.jl``` :
+Train soft quantile qLearning for different parameter of k. (Create ./experiment/run/train/Q_out/)
+
+(5) ```julia --threads 8 .\code\experiments\QLearning\b-evaluateQlearningPolicies.jl``` :
+Evaluate qLearning and compare its value function and policy performance against DP variants. (Create ./fig/all_algs/Q/)
+
+(6) ```julia .\code\experiments\QLearning\MorePlots\b-QValueW1Distance.jl``` :
+Compute the W1-Distance between qLearning and DP value function. (Create ./fig/all_algs/Q_learning_error/)
+
+Other optionals (merging plots and table)
+- ```julia .\code\experiments\DynamicProgram\MorePlots\a-inv2MultipleDiscretization.jl``` : {16,256,4096} Discretize performance of $\bar{q}$ and $\underbar{q}$ for inventory2 (Create ./fig/inventory2/inventory2-combine-discretize.*).
+- ```julia .\code\experiments\DynamicProgram\MorePlots\b-allAlgosTable.jl``` : Generate table that evaluate 25% performance for all algorithms across all domains.
+- ```julia .\code\experiments\DynamicProgram\MorePlots\c-allDomainsMultipleDiscretization.jl``` : {16,256,4096} Discretize performance of $\bar{q}$ and $\underbar{q}$ for all domains (Create ./fig/discretize/combine-discretize-100.*).
+- ```julia .\code\experiments\DynamicProgram\MorePlots\d-allAlgosScatterPlot.jl``` : {16,256,4096} Discretize performance of $\bar{q}$ and $\underbar{q}$ for all domains except for inventory2 (Create ./fig/all_algs/VaR/4096/no-INV2-combine-VI.*).
+- ```julia .\code\experiments\QLearning\MorePlots\a-qLearningEvalForinv2.jl``` : k={1e-4,1e-8,1e-12,0} $\tilde{q}$ and $\underbar{q}$ for inventory2 (Create ./fig/all_algs/Q/inventory2.*).
+- ```julia .\code\experiments\QLearning\MorePlots\c-qLearningEvalForAllDomain.jl``` : k={1e-4,1e-8,1e-12,0} $\tilde{q}$ and $\underbar{q}$ for all domains (Create ./fig/all_algs/Q/all.*).
+
 
 ## File Structure
 
@@ -22,16 +37,27 @@ Compute the W1-Distance between qLearning and DP value function.
     - *experiment.jl* : General functions for experiments, includes solveVI, evaluations, simplifyEvals and getTargetVaR.
     - *onlineMDP.jl* : Functions to execute policy in a monte carlo simulation. Type of policies include (Markov, QuantileDependent) as well as their time dependent variant.
     - *riskMeasure.jl* : Functions to create a discrete random variable and compute their risk (mean, min, max, q⁻, VaR, CVaR, ERM, EVaR).
-    - *TabMDP.jl* : Define MDP and Objective structure. Solve nested, quantile, ERM, EVaR, and distributional (markovQuantile) Value Iteration / Dynamic Program.
+    - *TabMDP.jl* : Define MDP and Objective structure. Solve nested, quantile, ERM, EVaR, and distributional (markovQuantile) Dynamic Program (DP) a.k.a Value Iteration (VI).
     - *utils.jl* : Commonly used functions for checking directory, decaying coefficient function and multi-dimensions function-applicator.
     - **others/**
         - *csv2MDP.jl* : Code to convert csv MDP files to MDP objects.
     - **experiments/**
         - **DynamicProgram/**
-            - *a-multipleDiscretizeExperiment.jl* : For multiple quantile discretization {16,64,256,1024,4096}, run VaR-DP-underApprox and VaR-DP-overApprox, then evaluate their respective policy.
+            - *a-multipleDiscretizeExperiment.jl* : For multiple quantile discretization {16,64,256,1024,4096}, run VaR-DP-underApprox and VaR-DP-overApprox, then evaluate their respective policies.
             - *b-allAlgorithmsComparison.jl* : Solve the optimal policy for each of the algorithm with their respective VI, then evaluate their performance.
             - **MorePlots/** : Code to combine multiple plots as subplots to generate a more compact plot.
         - **QLearning/**
             - *a-qLearning.jl* : Run soft quantile Q learning with different kappa parameters {1e-4,1e-8,1e-12,0}.
             - *b-evaluateQlearningPolicies.jl* : Evaluate Q-learning policy, and compare it with the DP variant.
             - **MorePlots/** : Code to combine multiple plots as subplots to generate a more compact plot.
+- **experiment/**
+    - **domain/**
+        - **csv/** : CSV file containing domain transition and reward.
+        - *domains_info.csv* : CSV file containing discount factor and initial state.
+        - **MDP/** : MDP JLD2 files (Generate from: ```julia .\code\others\csv2MDP.jl```)
+- **fig/**  
+    - **all_algs/**
+        - **VaR/** : Scatter plot of all algorithms performance in each domain. (Generate from: ```julia .\code\experiments\DynamicProgram\b-allAlgorithmsComparison.jl```)
+        - **Q/** : Compare q learning $\tilde{q}$ and dp $\underbar{q}$ value function and their $\tilde{\pi}$ $\underbar{\pi}$ policies performances, given kappa parameter.(Generate from: ```julia .\code\experiments\QLearning\b-evaluateQlearningPolicies.jl```)
+        - **Q_learning_error/** : Wasserstein 1 Distance plot of Q learning $\tilde{q}$ and dp $\underbar{q}$ value function.(Generate from: ```julia .\code\experiments\QLearning\MorePlots\b-QValueW1Distance.jl```)
+    - **[domain_name]/** : Compare over approximate dp $\bar{q}$ and underapproximate dp $\underbar{q}$ value function and their $\bar{\pi}$ $\underbar{\pi}$ policies performances. (Generate from: ```julia .\code\experiments\DynamicProgram\a-multipleDiscretizeExperiment.jl```)

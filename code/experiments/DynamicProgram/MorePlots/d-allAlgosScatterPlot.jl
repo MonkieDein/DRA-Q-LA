@@ -52,6 +52,6 @@ legend_labels = [ifelse(obj.ρ=="VaR","Alg 1",obj.ρ) for obj in objs]
 
 l = Legend(f[1, 1],legend_scatter,legend_labels,orientation = :vertical)
 
-save(check_path("fig/mc_test_result/all_algs/$risk_name/$lQl/no-INV2-combine-VI.pdf"), f)
+save(check_path("fig/mc_test_result/all_algs/$risk_name/no-INV2-combine-VI.pdf"), f)
 
 

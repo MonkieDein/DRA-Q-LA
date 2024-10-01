@@ -52,10 +52,10 @@ for (lr_setting,setting) in lr_settings
 
     # generate plot for each domain
     for (domain, results) in VI_ret
-        plot(title = "$i iteration κ=$(lr_setting[38:end-5]) Q-learning ($domain)",dpi=1200, xlabel = "Quantile level", ylabel = "Quantile Value",legend=:outerright) # 
+        plot(title = "κ=$(lr_setting[3:end]) Q-learning ($domain)",dpi=1200, xlabel = "Quantile level", ylabel = "Quantile Value",legend=:outerright) # 
         for (ρ, result) in results
-            scatter!(result["α"],result["values"], m = :circle,ms=6, label="VI",alpha=0.5)
-            scatter!(Q_ret[domain][ρ]["α"],Q_ret[domain][ρ]["values"], m = :star4,ms=6, label="Q",alpha=0.5)
+            scatter!(result["α"],result["values"], m = :circle,ms=6, label="π̲ performance",alpha=0.5)
+            scatter!(Q_ret[domain][ρ]["α"],Q_ret[domain][ρ]["values"], m = :star4,ms=6, label="π̃ performance",alpha=0.5)
             xlims!(0,1)
             max_y = Base.max(maximum(result["values"]),maximum(Q_ret[domain][ρ]["values"]))
             min_y = Base.min(minimum(result["values"]),minimum(Q_ret[domain][ρ]["values"]))
@@ -64,10 +64,10 @@ for (lr_setting,setting) in lr_settings
         end
         for (ρ, result) in VI_bound[domain]
             lim_val = (parEval[1] .<= result["α"]) .& (result["α"] .<= parEval[end])
-            plot!(result["α"],result["values"], label="VI bound")
-            plot!(Q_bound[domain][ρ]["α"],Q_bound[domain][ρ]["values"], label="Q bound")
+            plot!(result["α"],result["values"], label="q̲ᵈ")
+            plot!(Q_bound[domain][ρ]["α"],Q_bound[domain][ρ]["values"], label="q̃ᵈ")
         end
-        savefig(check_path("fig/mc_test_result/all_algs/Q/$T/$lr_setting-$i-$domain.png"))
+        savefig(check_path("fig/mc_test_result/all_algs/Q/$lr_setting-$domain.png"))
     end
 
 end
