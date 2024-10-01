@@ -1,5 +1,5 @@
-include("../../utils.jl")
-include("../../experiment.jl")
+include("../../../utils.jl")
+include("../../../experiment.jl")
 using CairoMakie
 
 # set up discretization for quantile and evaluations

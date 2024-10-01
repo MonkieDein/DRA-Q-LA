@@ -1,5 +1,5 @@
-include("../../TabMDP.jl")
-include("../../utils.jl")
+include("../TabMDP.jl")
+include("../utils.jl")
 using DataFrames
 using CSV
 

@@ -1,8 +1,8 @@
 
 # Evaluate all the algorithms performance for each parEval. 
 
-include("../../utils.jl")
-include("../../experiment.jl")
+include("../../../utils.jl")
+include("../../../experiment.jl")
 using CairoMakie
 
 lQl = 2^12
