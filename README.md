@@ -1,13 +1,12 @@
 # Distributional Risk-Averse Quantile Q Learning (DRA-Q-LA) 
----
-Preliminary:  and set the folder of this file as directory
----
 
-(1) Install Julia and VSCode
+## Preliminary
 
-(2) Open VSCode and then choose **This Folder** , open Terminal(Terminal >> New Terminal (Ctrl + Shift + `)) if does not already exist.
+(1) Install Julia and VSCode.
 
-(3) ```julia .\requirement.jl``` :  Install all required julia libraries
+(2) Open VSCode and then open **[This Folder]**, open Terminal in VSCode (Menubar - Terminal >> New Terminal (Ctrl + Shift + `)) if does not already open.
+
+(3) ```julia .\requirement.jl``` :  Install all required julia libraries.
 
 ## Order to run the code
 
