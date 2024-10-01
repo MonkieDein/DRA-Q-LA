@@ -1,7 +1,13 @@
 # Distributional Risk-Averse Quantile Q Learning (DRA-Q-LA) 
 ---
-Preliminary: Install Julia and set the folder of this file as directory
+Preliminary:  and set the folder of this file as directory
 ---
+
+(1) Install Julia and VSCode
+
+(2) Open VSCode and then choose **This Folder** , open Terminal(Terminal >> New Terminal (Ctrl + Shift + `)) if does not already exist.
+
+(3) ```julia .\requirement.jl``` :  Install all required julia libraries
 
 ## Order to run the code
 
@@ -23,12 +29,12 @@ Evaluate qLearning and compare its value function and policy performance against
 Compute the W1-Distance between qLearning and DP value function. (Create ./fig/all_algs/Q_learning_error/)
 
 Other optionals (merging plots and table)
-- ```julia .\code\experiments\DynamicProgram\MorePlots\a-inv2MultipleDiscretization.jl``` : {16,256,4096} Discretize performance of $\bar{q}$ and $\underbar{q}$ for inventory2 (Create ./fig/inventory2/inventory2-combine-discretize.*).
+- ```julia .\code\experiments\DynamicProgram\MorePlots\a-inv2MultipleDiscretization.jl``` : {16,256,4096} Discretize performance of $\bar{q}$ and $\ushort{q}$ for inventory2 (Create ./fig/inventory2/inventory2-combine-discretize.*).
 - ```julia .\code\experiments\DynamicProgram\MorePlots\b-allAlgosTable.jl``` : Generate table that evaluate 25% performance for all algorithms across all domains.
-- ```julia .\code\experiments\DynamicProgram\MorePlots\c-allDomainsMultipleDiscretization.jl``` : {16,256,4096} Discretize performance of $\bar{q}$ and $\underbar{q}$ for all domains (Create ./fig/discretize/combine-discretize-100.*).
-- ```julia .\code\experiments\DynamicProgram\MorePlots\d-allAlgosScatterPlot.jl``` : {16,256,4096} Discretize performance of $\bar{q}$ and $\underbar{q}$ for all domains except for inventory2 (Create ./fig/all_algs/VaR/4096/no-INV2-combine-VI.*).
-- ```julia .\code\experiments\QLearning\MorePlots\a-qLearningEvalForinv2.jl``` : k={1e-4,1e-8,1e-12,0} $\tilde{q}$ and $\underbar{q}$ for inventory2 (Create ./fig/all_algs/Q/inventory2.*).
-- ```julia .\code\experiments\QLearning\MorePlots\c-qLearningEvalForAllDomain.jl``` : k={1e-4,1e-8,1e-12,0} $\tilde{q}$ and $\underbar{q}$ for all domains (Create ./fig/all_algs/Q/all.*).
+- ```julia .\code\experiments\DynamicProgram\MorePlots\c-allDomainsMultipleDiscretization.jl``` : {16,256,4096} Discretize performance of $\bar{q}$ and $\ushort{q}$ for all domains (Create ./fig/discretize/combine-discretize-100.*).
+- ```julia .\code\experiments\DynamicProgram\MorePlots\d-allAlgosScatterPlot.jl``` : {16,256,4096} Discretize performance of $\bar{q}$ and $\ushort{q}$ for all domains except for inventory2 (Create ./fig/all_algs/VaR/4096/no-INV2-combine-VI.*).
+- ```julia .\code\experiments\QLearning\MorePlots\a-qLearningEvalForinv2.jl``` : k={1e-4,1e-8,1e-12,0} $\tilde{q}$ and $\ushort{q}$ for inventory2 (Create ./fig/all_algs/Q/inventory2.*).
+- ```julia .\code\experiments\QLearning\MorePlots\c-qLearningEvalForAllDomain.jl``` : k={1e-4,1e-8,1e-12,0} $\tilde{q}$ and $\ushort{q}$ for all domains (Create ./fig/all_algs/Q/all.*).
 
 
 ## File Structure
@@ -58,6 +64,6 @@ Other optionals (merging plots and table)
 - **fig/**  
     - **all_algs/**
         - **VaR/** : Scatter plot of all algorithms performance in each domain. (Generate from: ```julia .\code\experiments\DynamicProgram\b-allAlgorithmsComparison.jl```)
-        - **Q/** : Compare q learning $\tilde{q}$ and dp $\underbar{q}$ value function and their $\tilde{\pi}$ $\underbar{\pi}$ policies performances, given kappa parameter.(Generate from: ```julia .\code\experiments\QLearning\b-evaluateQlearningPolicies.jl```)
-        - **Q_learning_error/** : Wasserstein 1 Distance plot of Q learning $\tilde{q}$ and dp $\underbar{q}$ value function.(Generate from: ```julia .\code\experiments\QLearning\MorePlots\b-QValueW1Distance.jl```)
-    - **[domain_name]/** : Compare over approximate dp $\bar{q}$ and underapproximate dp $\underbar{q}$ value function and their $\bar{\pi}$ $\underbar{\pi}$ policies performances. (Generate from: ```julia .\code\experiments\DynamicProgram\a-multipleDiscretizeExperiment.jl```)
+        - **Q/** : Compare q learning $\tilde{q}$ and dp $\ushort{q}$ value function and their $\tilde{\pi}$ and $\ushort{\pi}$ policies performances, given kappa parameter.(Generate from: ```julia .\code\experiments\QLearning\b-evaluateQlearningPolicies.jl```)
+        - **Q_learning_error/** : Wasserstein 1 Distance plot of Q learning $\tilde{q}$ and dp $\ushort{q}$ value function.(Generate from: ```julia .\code\experiments\QLearning\MorePlots\b-QValueW1Distance.jl```)
+    - **[domain_name]/** : Compare over approximate dp $\bar{q}$ and underapproximate dp $\ushort{q}$ value function and their $\bar{\pi}$ and $\ushort{\pi}$ policies performances. (Generate from: ```julia .\code\experiments\DynamicProgram\a-multipleDiscretizeExperiment.jl```)
