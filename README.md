@@ -1,3 +1,3 @@
-# DRA-Q-LA 
-## Distributional Risk-Averse Quantile Q Learning
+# Distributional Risk-Averse Quantile Q Learning (DRA-Q-LA) 
+
 
