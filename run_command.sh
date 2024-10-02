@@ -4,10 +4,10 @@ julia requirement.jl
 # main code
 
 julia code/others/csv2MDP.jl
-julia --threads 32 code/experiments/DynamicProgram/a-multipleDiscretizeExperiment.jl
-julia --threads 32 code/experiments/DynamicProgram/b-allAlgorithmsComparison.jl
-julia --threads 32 code/experiments/QLearning/a-qLearning.jl
-julia --threads 32 code/experiments/QLearning/b-evaluateQlearningPolicies.jl
+julia --threads 8 code/experiments/DynamicProgram/a-multipleDiscretizeExperiment.jl
+julia --threads 8 code/experiments/DynamicProgram/b-allAlgorithmsComparison.jl
+julia --threads 8 code/experiments/QLearning/a-qLearning.jl
+julia --threads 8 code/experiments/QLearning/b-evaluateQlearningPolicies.jl
 julia code/experiments/QLearning/MorePlots/b-QValueW1Distance.jl
 
 # optional 

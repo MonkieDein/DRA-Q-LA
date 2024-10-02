@@ -13,6 +13,8 @@
 
 **POSSIBLE ERROR**: `textsize` has been renamed to `fontsize` in Makie v0.19. Please change all occurrences of `textsize` to `fontsize` or revert back to an earlier version. Depends on julia library `Makie` version please rename the argument for all optional codes under MorePlots.
 
+**MANUAL MODIFICATION**: Most main code run with **8** threads, which may speed up the process for certain algorithms. Could replace **8** to any appropriate number of threads that the users computer has.
+
 ### Option A : Run all the code with ```run_command.sh``` 
 
 ### Option B : Order to run the code (Alternatively)
