@@ -11,7 +11,7 @@
 
 ## Run the experiment code
 
-### Option A : Run all the code with ```run_command_linux.sh``` or ```run_command_linux.window``` depends on  
+### Option A : Run all the code with ```run_command.sh``` 
 
 ### Option B : Order to run the code (Alternatively)
 (1) ```julia code/others/csv2MDP.jl``` : Turn MDP domains CSV into MDP objects. (Create ./experiment/domain/MDP/)
