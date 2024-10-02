@@ -11,9 +11,9 @@
 
 ## Run the experiment code
 
-### Run all the code with ```run_command.sh```
+### Option A : Run all the code with ```run_command.sh```
 
-### Order to run the code (Alternatively)
+### Option B : Order to run the code (Alternatively)
 (1) ```julia .\code\others\csv2MDP.jl``` : Turn MDP domains CSV into MDP objects. (Create ./experiment/domain/MDP/)
 
 (2) ```julia --threads 8 .\code\experiments\DynamicProgram\a-multipleDiscretizeExperiment.jl``` :
