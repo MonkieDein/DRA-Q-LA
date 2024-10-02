@@ -44,8 +44,8 @@ for (domain, results) in ret
         global i += 1
     end
 end
-label_x = Label(f[4, 1:2], "Risk Level", textsize = 30)
-label_y = Label(f[:, 0], "VaR Value", rotation = pi/2, textsize = 30)
+label_x = Label(f[4, 1:2], "Risk Level", fontsize = 30)
+label_y = Label(f[:, 0], "VaR Value", rotation = pi/2, fontsize = 30)
 
 legend_scatter = [MarkerElement(color = (col[obj.ρ], 0.5), marker = marker[obj.ρ],markersize = 16) for obj in objs]
 legend_labels = [ifelse(obj.ρ=="VaR","Alg 1",obj.ρ) for obj in objs]

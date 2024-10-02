@@ -27,8 +27,8 @@ for (i,lQl) in enumerate(lQls)
         lines!(ax,result["α"],result["values"],color=(col[ρ], 0.5))
     end
 end
-sideinfo2 = Label(f[2, 2:3], "Quantile level", textsize = 30)
-sideinfo = Label(f[1, 0], "Quantile value", rotation = pi/2, textsize = 30)
+sideinfo2 = Label(f[2, 2:3], "Quantile level", fontsize = 30)
+sideinfo = Label(f[1, 0], "Quantile value", rotation = pi/2, fontsize = 30)
 obj_scatter = [[LineElement(color = (col[ρ], 0.5), lw=4) for ρ in ["VaR","VaR_over"]];
 [MarkerElement(color = (col[ρ], 0.5), marker = marker[ρ],markersize = 16) for ρ in ["VaR","VaR_over"]]]
 l = Legend(f[2, 1:3],obj_scatter,["q̲ᵈ ","q̄ᵈ ","π̲ performance","π̄ performance"],orientation = :horizontal)
