@@ -1,4 +1,4 @@
-# DRA-Q-LA (Distributional Risk-Averse Quantile Q Learning) 
+# DRA-Q-LA (Discretized Risk-Averse Quantile Q Learning) 
 
 ## Preliminary
 
