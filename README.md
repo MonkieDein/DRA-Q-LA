@@ -4,13 +4,15 @@
 
 (1) Install Julia and VSCode.
 
-(2) Open VSCode and then open **[This Folder]**, open Terminal in VSCode (Menubar - Terminal >> New Terminal (Ctrl + Shift + `)) if does not already open.
+(2) Open VSCode and then open **[This Folder]**, open Terminal in VSCode (Menubar-Terminal >> New Terminal (Ctrl + Shift + `)) if does not already open.
 
 (3) ```julia .\requirement.jl``` :  Install all required julia libraries.
 
-## Order to run the code
+### Run all the code with ```run_command.sh```
 
-(1) ```julia .\code\others\csv2MDP.jl``` : Turn MDP domains CSV into MDP objects. (Create ./experiment/domina/MDP/)
+## Order to run the code (Alternatively)
+
+(1) ```julia .\code\others\csv2MDP.jl``` : Turn MDP domains CSV into MDP objects. (Create ./experiment/domain/MDP/)
 
 (2) ```julia --threads 8 .\code\experiments\DynamicProgram\a-multipleDiscretizeExperiment.jl``` :
 Run VaR DP for multiple discretizations. (Create ./fig/[domain_name]/)
@@ -64,5 +66,5 @@ Other optionals (merging plots and table)
     - **all_algs/**
         - **VaR/** : Scatter plot of all algorithms performance in each domain. (Generate from: ```julia .\code\experiments\DynamicProgram\b-allAlgorithmsComparison.jl```)
         - **Q/** : Compare q learning $\tilde{q}$ and dp $\underline{q}$ value function and their $\tilde{\pi}$ and $\underline{\pi}$ policies performances, given kappa parameter.(Generate from: ```julia .\code\experiments\QLearning\b-evaluateQlearningPolicies.jl```)
-        - **Q_learning_error/** : Wasserstein 1 Distance plot of Q learning $\tilde{q}$ and dp $\underline{q}$ value function.(Generate from: ```julia .\code\experiments\QLearning\MorePlots\b-QValueW1Distance.jl```)
-    - **[domain_name]/** : Compare over approximate dp $\bar{q}$ and underapproximate dp $\underline{q}$ value function and their $\bar{\pi}$ and $\underline{\pi}$ policies performances. (Generate from: ```julia .\code\experiments\DynamicProgram\a-multipleDiscretizeExperiment.jl```)
+        - **Q_learning_error/** : Wasserstein-1 Distance plot of Q learning $\tilde{q}$ and dp $\underline{q}$ value function.(Generate from: ```julia .\code\experiments\QLearning\MorePlots\b-QValueW1Distance.jl```)
+    - **[domain_name]/** : Compare over-approximate dp $\bar{q}$ and under-approximate dp $\underline{q}$ value function and their $\bar{\pi}$ and $\underline{\pi}$ policies performances. (Generate from: ```julia .\code\experiments\DynamicProgram\a-multipleDiscretizeExperiment.jl```)

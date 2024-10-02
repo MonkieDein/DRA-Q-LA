@@ -41,7 +41,7 @@ for (domain, results) in ret
             result = results[ρ]
             scatter!(result["α"],result["values"], marker = marker[ρ],markersize=16,color=(col[ρ],0.5))
         end
-        i += 1
+        global i += 1
     end
 end
 label_x = Label(f[4, 1:2], "Risk Level", textsize = 30)

@@ -38,7 +38,7 @@ for T in [100]
     end
 
     # Simplify and Plot the Evaluations
-    for (risk_name, eval_metric) in [("VaR",VaR)]
+    for (risk_name, eval_metric) in [("VaR",VaR),("CVaR",CVaR),("EVaR",EVaR)]
         ret = simplifyEvals(objs,mdp_dir=mdp_dir,testfile=testfile,eval_metric = eval_metric)
         for (domain, results) in ret
             plot(title = ( T==-1 ? "infinite" : "$T")*" horizon policy evaluation $domain", xlims=(0,1), xlabel = "Risk level", ylabel = "$risk_name Value",legend=:outerright) # 
