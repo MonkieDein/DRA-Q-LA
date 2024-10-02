@@ -8,10 +8,12 @@
 
 (3) ```julia .\requirement.jl``` :  Install all required julia libraries.
 
+
+## Run the experiment code
+
 ### Run all the code with ```run_command.sh```
 
-## Order to run the code (Alternatively)
-
+### Order to run the code (Alternatively)
 (1) ```julia .\code\others\csv2MDP.jl``` : Turn MDP domains CSV into MDP objects. (Create ./experiment/domain/MDP/)
 
 (2) ```julia --threads 8 .\code\experiments\DynamicProgram\a-multipleDiscretizeExperiment.jl``` :
