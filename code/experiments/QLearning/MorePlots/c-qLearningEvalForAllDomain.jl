@@ -73,7 +73,7 @@ sideinfo2 = Label(f[8, 1:4], "Quantile level", fontsize = 30)
 sideinfo = Label(f[:, 0], "Quantile value", rotation = pi/2, fontsize = 30)
 obj_scatter = [[LineElement(color = (col[val], 0.5), lw=4) for val in ["Q","DP"]];
 [MarkerElement(color = (col[val], 0.5), marker = :circle,markersize = 16) for val in ["Q","DP"]]]
-l = Legend(f[8, 1:3],obj_scatter,["q̃ᵈ ","q̲ᵈ ","π̃ performance","π̲ performance"],orientation = :horizontal)
+l = Legend(f[8, 1:2],obj_scatter,["q̃ᵈ ","q̲ᵈ ","π̃ performance","π̲ performance"],orientation = :horizontal)
 save(check_path("fig/mc_test_result/all_algs/Q/all.png"), f)
 save(check_path("fig/mc_test_result/all_algs/Q/all.pdf"), f)
 

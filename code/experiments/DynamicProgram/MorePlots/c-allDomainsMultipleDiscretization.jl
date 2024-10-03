@@ -32,7 +32,7 @@ sideinfo2 = Label(f[8, 2:3], "Quantile level", fontsize = 30)
 sideinfo = Label(f[:, 0], "Quantile value", rotation = pi/2, fontsize = 30)
 obj_scatter = [[LineElement(color = (col[ρ], 0.5), lw=4) for ρ in ["VaR","VaR_over"]];
 [MarkerElement(color = (col[ρ], 0.5), marker = marker[ρ],markersize = 16) for ρ in ["VaR","VaR_over"]]]
-l = Legend(f[8, 1:3],obj_scatter,["q̲ᵈ ","q̄ᵈ ","π̲ performance","π̄ performance"],orientation = :horizontal)
+l = Legend(f[8, 1:2],obj_scatter,["q̲ᵈ ","q̄ᵈ ","π̲ performance","π̄ performance"],orientation = :horizontal)
 # supertitle = Label(f[0, :], "Discretize VaR MDP performance", fontsize = 30)
 
 save(check_path("fig/mc_test_result/combine-discretize-$T.png"), f)
