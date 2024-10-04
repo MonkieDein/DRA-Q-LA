@@ -52,7 +52,7 @@ for (i,lr_setting) in enumerate(lr_settings)
     Q_bound = getTargetVaR(init_jld(Q_out_dir*"$n_steps.jld2"),[obj],mdp_dir=mdp_dir)
     for (j,pair) in enumerate(VI_ret) 
         domain, results = pair
-        ax = Axis(f[j, i], title="κ=$(lr_setting[37:end-5]) Q-learning ($domain)") 
+        ax = Axis(f[j, i], title="κ=$(lr_setting[3:end]) Q-learning ($domain)") 
         for (ρ, result) in results
             scatter!(ax,result["α"],result["values"], marker = :circle,markersize = 16,color=(col["DP"], 0.5))
             scatter!(ax,Q_ret[domain][ρ]["α"],Q_ret[domain][ρ]["values"], marker = :circle,markersize = 16,color=(col["Q"], 0.5))
