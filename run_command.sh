@@ -11,7 +11,6 @@ julia --threads 8 code/experiments/QLearning/b-evaluateQlearningPolicies.jl
 julia code/experiments/QLearning/MorePlots/b-QValueW1Distance.jl
 
 # optional 
-
 julia code/experiments/DynamicProgram/MorePlots/a-inv2MultipleDiscretization.jl
 julia code/experiments/DynamicProgram/MorePlots/b-allAlgosTable.jl
 julia code/experiments/DynamicProgram/MorePlots/c-allDomainsMultipleDiscretization.jl

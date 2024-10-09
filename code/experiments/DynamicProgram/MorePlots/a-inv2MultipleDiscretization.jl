@@ -6,7 +6,7 @@ lQls = 2 .^ [4,8,12]
 lEQl = 10 
 parEval = collect(LinRange(0, 1, lEQl*2+1))[2:2:end]
 
-marker = Dict("E"=>:diamond,"VaR"=>:circle,"VaR_over"=>:hexagon,"nVaR"=>:rect,"dVaR"=>:cross)
+marker = Dict("E"=>:diamond,"VaR"=>:circle,"VaR_over"=>:circle,"nVaR"=>:rect,"dVaR"=>:cross)
 col = Dict("E"=>:red,"VaR"=>:blue,"VaR_over"=>:darkred,"nVaR"=>:green,"dVaR"=>:black)
 T=100
 
@@ -26,12 +26,17 @@ for (i,lQl) in enumerate(lQls)
     for (ρ, result) in bound
         lines!(ax,result["α"],result["values"],color=(col[ρ], 0.5))
     end
+    if i>1
+        hideydecorations!(ax, grid = false)
+    end
 end
 sideinfo2 = Label(f[2, 2:3], "Quantile level", fontsize = 30)
-sideinfo = Label(f[1, 0], "Quantile value", rotation = pi/2, fontsize = 30)
 obj_scatter = [[LineElement(color = (col[ρ], 0.5), lw=4) for ρ in ["VaR","VaR_over"]];
 [MarkerElement(color = (col[ρ], 0.5), marker = marker[ρ],markersize = 16) for ρ in ["VaR","VaR_over"]]]
 l = Legend(f[2, 1:2],obj_scatter,["q̲ᵈ ","q̄ᵈ ","π̲ performance","π̄ performance"],orientation = :horizontal)
+
+sideinfo = Label(f[1, 0], "Quantile value", rotation = pi/2, fontsize = 30)
+
 
 save(check_path("fig/mc_test_result/$domain/$T/$domain-combine-discretize.png"), f)
 save(check_path("fig/mc_test_result/$domain/$T/$domain-combine-discretize.pdf"), f)
