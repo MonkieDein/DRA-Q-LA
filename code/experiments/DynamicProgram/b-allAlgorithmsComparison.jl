@@ -41,7 +41,9 @@ for T in [100]
     for (risk_name, eval_metric) in [("VaR",VaR)] 
         ret = simplifyEvals(objs,mdp_dir=mdp_dir,testfile=testfile,eval_metric = eval_metric)
         for (domain, results) in ret
-            plot(title = ( T==-1 ? "infinite" : "$T")*" horizon policy evaluation $domain", xlims=(0,1), xlabel = "Quantile level", ylabel = "Quantile value",legend=:outerright) # 
+            plot(title = "policy evaluation $domain", xlims=(0,1), 
+            xlabel = "Quantile level", ylabel = "Quantile value",legend=:outerright,
+            titlefontsize = 24,guidefontsize = 18,legendfontsize = 16,tickfontsize=12) # 
             for obj in objs
                 ρ = obj.ρ
                 result = results[ρ]

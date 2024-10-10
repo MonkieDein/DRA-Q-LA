@@ -42,13 +42,15 @@ for d in domains
     domain = d[1:end-5]
     VI_q = getTargetVaR(init_jld("experiment/run/train/out_$T_VI.jld2"),[obj_VI],mdp_dir=mdp_dir)
     W1_distance[domain] = Dict()
-    plot(title = "Q-learning vs DP ($domain)",ylabel="Wasserstein-1 Distance",xlabel ="Number of Samples") # , yscale=:log10
+    plot(title = "Q-learning vs DP ($domain)",ylabel="Wasserstein-1 Distance",xlabel ="Number of Samples",
+    titlefontsize = 22,guidefontsize = 16,legendfontsize = 14,tickfontsize=10)
     for (lr_setting,setting) in lr_settings
         println("$lr_setting-$domain")
         Q_out_dir = "experiment/run/train/Q_out/$lr_setting/"
         W1_distance[domain][lr_setting] = Dict()
         W1_distance[domain][lr_setting]["step"] = collect(eval_every:eval_every:n_steps )
         dist = []
+        xlims!(0,n_steps*1.1)
         for i in W1_distance[domain][lr_setting]["step"]
             Q_q = getTargetVaR(init_jld(Q_out_dir*"$i.jld2"),[obj],mdp_dir=mdp_dir)
             push!(dist, mean(abs.(Q_q[domain]["VaR"]["values"] .- VI_q[domain]["VaR"]["values"])[2:end]))
