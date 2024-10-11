@@ -1,4 +1,4 @@
-# DRA-Q-LA (Discretized Risk-Aware Quantile Q Learning) 
+# Q-learning for Quantile MDPs: A Decomposition, Performance, and Convergence Analysis
 
 ## Preliminary
 
