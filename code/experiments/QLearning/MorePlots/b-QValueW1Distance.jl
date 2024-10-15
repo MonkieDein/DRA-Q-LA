@@ -53,7 +53,7 @@ for d in domains
         xlims!(0,n_steps*1.1)
         for i in W1_distance[domain][lr_setting]["step"]
             Q_q = getTargetVaR(init_jld(Q_out_dir*"$i.jld2"),[obj],mdp_dir=mdp_dir)
-            push!(dist, mean(abs.(Q_q[domain]["VaR"]["values"] .- VI_q[domain]["VaR"]["values"])[2:end]))
+            push!(dist, mean(abs.(Q_q[domain]["VaR"]["values"] .- VI_q[domain]["VaR"]["values"])))
         end
         W1_distance[domain][lr_setting]["distance"] = dist
         plot!(W1_distance[domain][lr_setting]["step"], dist, label="κ = $(lr_setting[3:end])", lw=2)
