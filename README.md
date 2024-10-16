@@ -47,7 +47,6 @@ Other optionals (merging plots and table)
 
 
 ## File Structure
-- *full_paper.pdf* : The full paper for AISTATS 2025 submission.
 - **code/**
     - *experiment.jl* : General functions for experiments, includes solveVI, evaluations, simplifyEvals and getTargetVaR.
     - *onlineMDP.jl* : Functions to execute policy in a monte carlo simulation. Type of policies include (Markov, QuantileDependent) as well as their time dependent variant.
