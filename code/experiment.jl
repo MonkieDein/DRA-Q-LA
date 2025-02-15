@@ -62,7 +62,7 @@ function simplifyEvals(objs::Vector{Objective};mdp_dir = "experiment/domain/MDP/
                 end
             else
                 x = evals[string(obj.l)][domain][obj.ρ]
-                if obj.ρ in Set(["E","mean"]) # for mean there is only a single policy regarding parameter, can apply one evaluation for all levels
+                if obj.ρ in Set(["E","mean","min","max"]) # for mean there is only a single policy regarding parameter, can apply one evaluation for all levels
                     VaR_results[domain][obj.ρ] = Dict("values"=>eval_metric( distribution(x["values"]), obj.parEval ),"α"=>obj.parEval)
                 else
                     VaR_results[domain][obj.ρ] = Dict("values"=>[eval_metric(distribution(v),[lvl])[1] for (v,lvl) in zip(x["values"],x["α"])],"α"=>x["α"])

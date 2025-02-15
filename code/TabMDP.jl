@@ -59,10 +59,11 @@ viFunDict = Dict(
     "max" => Dict( "type" => "nest", "fx" => max , "cdf2pdf" => q_evenPdf),
     "E" => Dict( "type" => "nest", "fx" => E , "cdf2pdf" => q_evenPdf),
     "mean" => Dict( "type" => "nest", "fx" => E , "cdf2pdf" => q_evenPdf),
-    "CVaR" => Dict( "type" => "quant", "fx" => CVaR , "cdf2pdf" => CVaR_cdf2pdf), # Chow CVaR Value Iteration
+    "Chow" => Dict( "type" => "quant", "fx" => CVaR , "cdf2pdf" => CVaR_cdf2pdf), # Chow CVaR Value Iteration
+    "CVaR" => Dict( "type" => "target", "fx" => E , "cdf2pdf" => q_evenPdf), # Baurle target value CVaR Value Iteration, mean of CVaR utility
     "quant" => Dict( "type" => "quant", "fx" => quant , "cdf2pdf" => q_evenPdf), # Objective.pars := [1/J,2/J,...,J/J]
-    "quant_under" => Dict( "type" => "quant", "fx" => quant , "cdf2pdf" => q_evenPdf), # Objective.pars := [0,2/J,...,(J-1)/J]
-    "VaR" => Dict( "type" => "quant", "fx" => VaR , "cdf2pdf" => q_evenPdf), # Objective.pars := [0,2/J,...,(J-1)/J]
+    "quant_under" => Dict( "type" => "quant", "fx" => quant , "cdf2pdf" => q_evenPdf), # Objective.pars := [0,1/J,...,(J-1)/J]
+    "VaR" => Dict( "type" => "quant", "fx" => VaR , "cdf2pdf" => q_evenPdf), # Objective.pars := [0,1/J,...,(J-1)/J]
     "VaR_over" => Dict( "type" => "quant", "fx" => VaR , "cdf2pdf" => q_evenPdf), # Objective.pars := [1/J,2/J,...,J/J]
     "ERM" => Dict( "type" => "ent", "fx" => ERMs , "cdf2pdf" => q_evenPdf),
     "EVaR" => Dict( "type" => "ent", "fx" => EVaR , "cdf2pdf" => q_evenPdf), # Hau EVaR MDP
@@ -74,14 +75,14 @@ viFunDict = Dict(
 mutable struct Objective
     ρ::String
     T::Int
-    δ::Float64
+    δ::Any
     pars::Array
     l::Int
     ρ_type::String
     ρ_fx::Function
     pdf::Array
     parEval::Array # This is particular for DistMarkov type as they could have (discretization , evals)
-    function Objective(;ρ::String = "E", T::Int = -1, δ::Float64 = 0.0, pars = [1.0],parEval=[1.0])
+    function Objective(;ρ::String = "E", T::Int = -1, δ::Any = 0, pars = [1.0],parEval=[1.0])
         ρ ∈ keys(viFunDict) || error(ρ * "-MDP not supported. Please choose from :"*string(allrisks))
         ρfeatures = viFunDict[ρ]
         ρ_type = ρfeatures["type"]
@@ -122,6 +123,13 @@ function VI(mdp::MDP,obj::Objective)
             out =  [ nestVi(mdp,obj, param=par) for par in obj.pars]
         end
         return length(out)==1 ? out[1] : out
+    # Target value augmentation approach, is accurate only when target value is sufficiently discretize
+    elseif obj.ρ_type == "target"
+        if obj.T == -1  # infinite horizon
+            error("Infinite horizon for target level MDP is not implemented")
+        else  # finite horizon
+            return  targetVi(mdp,obj)
+        end
     # Quantile augmentation approach, is accurate only when quantile is discretize sufficiently
     elseif obj.ρ_type == "quant"
         if obj.T == -1  # infinite horizon
@@ -271,7 +279,7 @@ end
 # quantile Q return the joint distribution given lSl marginal and conditional distribution
 function quantile_q(mdp::MDP,obj::Objective, s::Int, a::Int, V)
     # Imputation strategy
-    if obj.ρ == "CVaR"
+    if obj.ρ == "Chow"
         Xs = [mdp.R[s, a, sn] .+ (mdp.γ .* (CVaR2X(V[sn, :],obj.pars,obj.pdf)) ) for sn in mdp.S_sa[s][a]]
     else 
         Xs = [mdp.R[s, a, sn] .+ (mdp.γ .* (@view V[sn, :]) ) for sn in mdp.S_sa[s][a]]
@@ -374,6 +382,103 @@ function markovQuantVi(mdp::MDP,obj::Objective,param::Float64)
         end
     end
     return mdp_out(v, π , param)
+end
+
+
+# A recursive function for target value - CVaR MDP : Average Value at Risk - Baurle (2011)
+# Input :
+# T : Total time horizon
+# v : Value function Matrix of dictionaries v[t,s][z] (value)
+# v : Value function Matrix of dictionaries π_[t,s][z] (action)
+# t : Current step (start from 1 and end at T)
+# s,z : Current state and target level
+# mdp : A Markov Decision Process model
+# lb,ub : Lower bound and upper bound of z. 
+# If z < lb[t,s], then v[t,s][z] = 0. 
+# If z > ub[t,s], then v[t,s][z] = (z-ub[t,s] + v[t,s][ub[t,s]]).
+# digit : Decimal digit of discretization.
+function target_recursive(T,v,π_,t,s,z,mdp,lb,ub;digit=2)
+    if haskey(v[t,s],z)
+        return v[t,s][z]
+    end
+    # lower bound case
+    if z < lb[t,s]
+        return target_recursive(T,v,t,s,lb[t,s],mdp,lb,ub;digit=digit)
+    end
+    # upper bound case
+    if z > ub[t,s]
+        return (target_recursive(T,v,t,s,ub[t,s],mdp,lb,ub;digit=digit) + (z-ub[t,s]))
+    end
+    # final horizon case
+    if t == (T+1)
+        init_z = Base.max(z,0)
+        for s in mdp.S
+            v[t,s][z] = init_z
+            π_[t,s][z] = 0 # no action (0) require at termination (T+1)
+        end
+        return init_z
+    end
+    q_min = Inf
+    q_act = 0
+    for a in mdp.valid_A[s]
+        total = 0.0 
+        for s_ in mdp.S_sa[s][a]
+            total += (mdp.P[s, a, s_] * target_recursive(T,v,π_,t+1,s_, ceil((z-mdp.R[s, a, s_])/mdp.γ,digits=digit),mdp,lb,ub,digit=digit))
+        end
+        total *= mdp.γ
+
+        if q_min > total
+            q_min = total
+            q_act = a
+        end
+    end
+
+    v[t,s][z] = q_min
+    π_[t,s][z] = q_act
+    return q_min
+end
+
+# A function that collect solution of target value based MDP : 
+# Average Value at Risk - Baurle (2011)
+# Input : 
+# mdp : A Markov Decision Process model
+# T : Total time horizon
+# obj : Currently only "CVaR" is handled
+function targetVi(mdp::MDP,obj::Objective;T=1000)
+    if obj.ρ != "CVaR"
+        error("targetVI can only handle CVaR, other utility function is not implemented.")
+    end
+    # digit (obj.δ) : Decimal digit of discretization.
+    digit = obj.δ # Should be integer
+    # compute value function lower bound and upper bound
+    lb_v = VI(mdp,Objective(ρ="min",T = T))["v"]
+    ub_v = VI(mdp,Objective(ρ="max",T = T))["v"]
+    # set_Z : Initial targt value discretization
+    minv = minimum(lb_v[1,findall(mdp.s0 .!= 0)])
+    maxv = maximum(ub_v[1,findall(mdp.s0 .!= 0)])
+    Z0 = ceil.(collect(minv:(10.0^(-digit)):maxv),digits=digit)
+    # lb,ub : Lower bound and upper bound of z. During recursive
+    # If z < lb[t,s], then v[t,s][z] = 0. 
+    # If z > ub[t,s], then v[t,s][z] = (z-ub[t,s] + v[t,s][ub[t,s]]).
+    lb = ceil.(min_vf,digits=digit)
+    ub = ceil.(max_vf,digits=digit)
+    # v : Value function 2D dictionaries v[t,s][z][1] (value), v[t,s][z][2] (action)
+    v = [Dict{Float64, Any}() for t in 1:(T+1), s in 1:mdp.lSl]
+    π_ = [Dict{Float64, Any}() for t in 1:(T+1), s in 1:mdp.lSl]
+    for z in ProgressBar(Z0)
+        for s0 in findall(mdp.s0 .!= 0)
+            target_recursive(T,v,π_,1,s0,z,mdp,lb,ub,digit=digit)
+        end
+    end
+    return Dict("v" => v, "π" => π_, "Z0" => Z0)
+end
+
+function initTarget(mdp::MDP, v::Matrix{Dict{Float64, Any}},Z0::Vector{Float64}, parEval::Vector{Float64})
+    S0 = findall(mdp.s0 .!= 0)
+    v0 = [sum([v[1,s0][z] for s0 in S0] .* mdp.s0[S0]) for z in Z0] # v0[z] = E[ E[v[1,s0][z] | s̃0] ]
+    opt_j = [argmax(Z0 .- (v0/(q))) for q in parEval]
+    opt_value = Z0[opt_j] .- (v0[opt_j] ./ parEval) 
+    return Dict("value"=> opt_value,"opt_z"=> Z0[opt_j], "α" => parEval )
 end
 
 function df2MDP(df,γ=0.95;s_init = 0)

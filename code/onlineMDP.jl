@@ -71,7 +71,7 @@ function simulate(VI_out::Any,obj::Objective,mdp::MDP;ENV_NUM = 10000,T = 1000,s
             simulate_fun = simulateQuant_TimeDep
             v = v[1,:,:]
         end
-        if obj.ρ == "CVaR"
+        if obj.ρ == "Chow"
             v = collect(hcat([(CVaR2X(v[s0, :],obj.pars,obj.pdf)) for s0 in mdp.S]...)')
         end
         d0 = initDistribution(mdp,v, obj.pdf)
@@ -80,6 +80,18 @@ function simulate(VI_out::Any,obj::Objective,mdp::MDP;ENV_NUM = 10000,T = 1000,s
             "option 1" => eval_out( obj.parEval,[simulate_fun(τ,VI_out["v"],VI_out["π"],mdp,ENV_NUM=ENV_NUM,T=T,renew_τ = true,seed=seed,ϵ=quant_ϵ) for τ in τs] )
             #,"option 2" => eval_out( obj.parEval,[simulate_fun(τ,v,VI_out["π"],mdp,ENV_NUM=ENV_NUM,T=T,renew_τ = false,seed=seed,ϵ=quant_ϵ) for τ in τs] )
         )
+    elseif obj.ρ_type == "target"
+        if obj.T == -1
+            error("target value methods cannot handle infinite horizon yet.")
+        end
+        τs = initDistribution(mdp,VI_out["v"], VI_out["Z0"],obj.parEval)
+        α_2_τ = Dict(obj.parEval, τs)
+        τ_set = Set(τs)
+        output = Dict()
+        for τ in τ_set
+            output[τ] = simulatePrimalTimeDep(τ,VI_out["v"],mdp,ENV_NUM = 10000,T = T,seed=123,digit=obj.δ)
+        end
+        return eval_out(obj.parEval,[output[α_2_τ[α]] for α in obj.parEval])
     end
 end
 
@@ -154,6 +166,24 @@ function simulateQuant_TimeDep(τ0::Float64,v::Array{Float64},π::Array{I},mdp::
         τ = (τ .- r)
         τ = (τ .* (ifelse.( τ .< 0 , ((1+ϵ)/mdp.γ) , ((1-ϵ)/mdp.γ))))
 
+        cum_rew += (r * mdp.γ^(t-1))
+    end
+    return cum_rew
+end
+
+# This methods currently only handle CVaR by Baurle (2011)
+function simulatePrimalTimeDep(τ0::Float64,policy,mdp::MDP;ENV_NUM = 10000,T = 1000,seed=123,digit=2) 
+    Random.seed!(seed)
+    envs = mdpEnvironments(ENV_NUM,mdp)
+    cum_rew = zeros(ENV_NUM)
+    states = reset(envs)
+    τ = fill(τ0 ,ENV_NUM)
+    lim_z = [(isempty(keys(policy[t,s])) ? nothing : extreme(keys(policy[t,s]))) for t in 1:T, s in mdp.S]
+
+    for t in 1:T
+        actions = [policy[t,s][clamp(τ[i],lim_z[t,s]...)] for (i,s) in enumerate(states)]
+        states,r = step(envs,actions)
+        τ = ceil.( (τ .- r) ./ mdp.γ ,digits=digit)
         cum_rew += (r * mdp.γ^(t-1))
     end
     return cum_rew
