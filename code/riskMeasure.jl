@@ -278,4 +278,12 @@ function CVaR2D(cvar::Array, cdf::Array; decimal::Integer = 10)
     return distribution(X, pdf)
 end
 
+"""
+extreme(vector)
+take in a vector of values and return (min,max) of the vector
+"""
+function extreme(X)
+    return (minimum(X),maximum(X))
+end
+
 

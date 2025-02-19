@@ -19,12 +19,12 @@ testfile = "experiment/run/test/evals_$(T).jld2"
 # Combine evaluation
 meanObj = Objective(ρ="E", pars=[1.0],parEval=parEval,T = T) # mean
 VaRObj = Objective(ρ="VaR", pars=pars[1:end-1], parEval=parEval,T = T) # VaR
-ChowObj = Objective(ρ="CVaR", pars=pars, parEval=parEval,T = T) # CVaR
+ChowObj = Objective(ρ="Chow", pars=pars, parEval=parEval,T = T) # Chow
 nVaRObj = Objective(ρ="nVaR", pars=parEval, parEval=parEval,T = T) # nVaR
 distVaRObj = Objective(ρ="dVaR", pars=par_hat,parEval=parEval,T = T) # distVaR
 EVaRObj = Objective(ρ="EVaR", pars=parEval,parEval=parEval,T = T) # EVaR
-objs = [ VaRObj ; nVaRObj;distVaRObj ; meanObj;ChowObj ;EVaRObj  ]  #   
-
+BaurleCVaRObj = Objective(ρ="CVaR", pars=[1.0], parEval=parEval,δ = 5,T = T) # CVaR (relative significant δ)
+objs = [ VaRObj ; nVaRObj;distVaRObj ; meanObj;ChowObj ;BaurleCVaRObj;EVaRObj  ]  #  
 # test
 MultiEvals = load_jld("experiment/run/test/multi_evals_$T.jld2")
 ret = MultiEvals["$lQl"]["ret"]

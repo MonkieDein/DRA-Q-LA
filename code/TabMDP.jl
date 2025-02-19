@@ -403,11 +403,11 @@ function target_recursive(T,v,π_,t,s,z,mdp,lb,ub;digit=2)
     end
     # lower bound case
     if z < lb[t,s]
-        return target_recursive(T,v,t,s,lb[t,s],mdp,lb,ub;digit=digit)
+        return target_recursive(T,v,π_,t,s,lb[t,s],mdp,lb,ub;digit=digit)
     end
     # upper bound case
     if z > ub[t,s]
-        return (target_recursive(T,v,t,s,ub[t,s],mdp,lb,ub;digit=digit) + (z-ub[t,s]))
+        return (target_recursive(T,v,π_,t,s,ub[t,s],mdp,lb,ub;digit=digit) + (z-ub[t,s]))
     end
     # final horizon case
     if t == (T+1)
@@ -444,41 +444,41 @@ end
 # mdp : A Markov Decision Process model
 # T : Total time horizon
 # obj : Currently only "CVaR" is handled
-function targetVi(mdp::MDP,obj::Objective;T=1000)
+function targetVi(mdp::MDP,obj::Objective)
     if obj.ρ != "CVaR"
         error("targetVI can only handle CVaR, other utility function is not implemented.")
     end
-    # digit (obj.δ) : Decimal digit of discretization.
-    digit = obj.δ # Should be integer
     # compute value function lower bound and upper bound
-    lb_v = VI(mdp,Objective(ρ="min",T = T))["v"]
-    ub_v = VI(mdp,Objective(ρ="max",T = T))["v"]
+    lb_v = VI(mdp,Objective(ρ="min",T = obj.T))["v"]
+    ub_v = VI(mdp,Objective(ρ="max",T = obj.T))["v"]
     # set_Z : Initial targt value discretization
     minv = minimum(lb_v[1,findall(mdp.s0 .!= 0)])
     maxv = maximum(ub_v[1,findall(mdp.s0 .!= 0)])
+    # digit(obj.δ) Integer : Decimal digit of discretization.
+    digit = -ceil(Int,log(maxv-minv)/log(10))+obj.δ
     Z0 = ceil.(collect(minv:(10.0^(-digit)):maxv),digits=digit)
     # lb,ub : Lower bound and upper bound of z. During recursive
     # If z < lb[t,s], then v[t,s][z] = 0. 
     # If z > ub[t,s], then v[t,s][z] = (z-ub[t,s] + v[t,s][ub[t,s]]).
-    lb = ceil.(min_vf,digits=digit)
-    ub = ceil.(max_vf,digits=digit)
+    lb = ceil.(lb_v,digits=digit)
+    ub = ceil.(ub_v,digits=digit)
     # v : Value function 2D dictionaries v[t,s][z][1] (value), v[t,s][z][2] (action)
-    v = [Dict{Float64, Any}() for t in 1:(T+1), s in 1:mdp.lSl]
-    π_ = [Dict{Float64, Any}() for t in 1:(T+1), s in 1:mdp.lSl]
+    v = [Dict{Float64, Float64}() for t in 1:(obj.T+1), s in 1:mdp.lSl]
+    π_ = [Dict{Float64,Int}() for t in 1:(obj.T+1), s in 1:mdp.lSl]
     for z in ProgressBar(Z0)
         for s0 in findall(mdp.s0 .!= 0)
-            target_recursive(T,v,π_,1,s0,z,mdp,lb,ub,digit=digit)
+            target_recursive(obj.T,v,π_,1,s0,z,mdp,lb,ub,digit=digit)
         end
     end
-    return Dict("v" => v, "π" => π_, "Z0" => Z0)
+    return Dict("v" => v, "π" => π_, "Z0" => Z0, "digit" => digit)
 end
 
-function initTarget(mdp::MDP, v::Matrix{Dict{Float64, Any}},Z0::Vector{Float64}, parEval::Vector{Float64})
+function initTarget(mdp::MDP, v::Matrix{Dict{Float64, Float64}},Z0::Vector{Float64}, parEval::Vector{Float64})
     S0 = findall(mdp.s0 .!= 0)
     v0 = [sum([v[1,s0][z] for s0 in S0] .* mdp.s0[S0]) for z in Z0] # v0[z] = E[ E[v[1,s0][z] | s̃0] ]
     opt_j = [argmax(Z0 .- (v0/(q))) for q in parEval]
     opt_value = Z0[opt_j] .- (v0[opt_j] ./ parEval) 
-    return Dict("value"=> opt_value,"opt_z"=> Z0[opt_j], "α" => parEval )
+    return Dict("value"=> opt_value,"opt_z"=> Z0[opt_j], "α" => parEval ) # CVaR_value, z⋆ , α
 end
 
 function df2MDP(df,γ=0.95;s_init = 0)

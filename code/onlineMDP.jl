@@ -84,14 +84,8 @@ function simulate(VI_out::Any,obj::Objective,mdp::MDP;ENV_NUM = 10000,T = 1000,s
         if obj.T == -1
             error("target value methods cannot handle infinite horizon yet.")
         end
-        τs = initDistribution(mdp,VI_out["v"], VI_out["Z0"],obj.parEval)
-        α_2_τ = Dict(obj.parEval, τs)
-        τ_set = Set(τs)
-        output = Dict()
-        for τ in τ_set
-            output[τ] = simulatePrimalTimeDep(τ,VI_out["v"],mdp,ENV_NUM = 10000,T = T,seed=123,digit=obj.δ)
-        end
-        return eval_out(obj.parEval,[output[α_2_τ[α]] for α in obj.parEval])
+        τs = initTarget(mdp,VI_out["v"], VI_out["Z0"],obj.parEval)
+        return eval_out(obj.parEval,[simulatePrimalTimeDep(τ,VI_out["π"],mdp,ENV_NUM = ENV_NUM,T = T,seed=123,digit=VI_out["digit"]) for τ in τs["opt_z"]])
     end
 end
 

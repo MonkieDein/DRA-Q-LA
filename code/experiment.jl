@@ -2,6 +2,15 @@ include("TabMDP.jl")
 include("utils.jl")
 include("onlineMDP.jl")
 
+function delete_risk_VI(ρ,vf;mdp_dir = "experiment/domain/MDP/")
+    domains = readdir(mdp_dir)
+    for d in domains
+        domain = d[1:end-5]
+        delete!(vf["1"][domain], ρ)
+    end 
+    return vf
+end
+
 function solveVI(objs::Vector{Objective};mdp_dir = "experiment/domain/MDP/",filename = "experiment/run/train/out.jld2")
     # load domains file name, and load value function dictionaries
     domains = readdir(mdp_dir)
@@ -25,6 +34,7 @@ function solveVI(objs::Vector{Objective};mdp_dir = "experiment/domain/MDP/",file
             save_jld(filename,vf)
         end
     end
+    return vf
 end
 
 function evaluations(vf,objs::Vector{Objective};ENV_NUM = 10000, T_inf = 500,
@@ -55,7 +65,7 @@ function simplifyEvals(objs::Vector{Objective};mdp_dir = "experiment/domain/MDP/
         for obj in objs
             in_jld(evals, obj.l, domain, obj.ρ) || error("Could not find setting in evals $domain $(obj.l) $(obj.ρ)")
             println("Working on simplifyEvals : ",domain ," for $(obj.ρ)")
-            if obj.ρ_type == "quant" #in Set(["VaR","VaR_over"])
+            if obj.ρ_type == "quant" 
                 for opt in ["option 1"] 
                     x = evals[string(obj.l)][domain][obj.ρ][opt]
                     VaR_results[domain][obj.ρ] = Dict("values"=>[eval_metric(distribution(v),[lvl])[1] for (v,lvl) in zip(x["values"],x["α"])],"α"=>x["α"])
