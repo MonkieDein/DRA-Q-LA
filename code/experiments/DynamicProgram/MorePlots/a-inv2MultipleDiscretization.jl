@@ -17,7 +17,7 @@ domain = "inventory2"
 for (i,lQl) in enumerate(lQls)
     bound = MultiEvals["$lQl"]["bound"][domain]
     results = MultiEvals["$lQl"]["ret"][domain]
-    ax = Axis(f[1, i], title="$lQl discretization VaR") 
+    ax = Axis(f[1, i], title="J=$lQl discretization VaR",titlefont="CMU Serif", titlesize=24) 
     xlims!(ax,0,1)
     ax.xticks = 0:.2:1
     for (ρ, result) in results
@@ -30,12 +30,12 @@ for (i,lQl) in enumerate(lQls)
         hideydecorations!(ax, grid = false)
     end
 end
-sideinfo2 = Label(f[2, 2:3], "Quantile level", fontsize = 30)
+sideinfo2 = Label(f[2, 2:3], "Quantile level", fontsize = 22,font="CMU Serif")
 obj_scatter = [[LineElement(color = (col[ρ], 0.5), lw=4) for ρ in ["VaR","VaR_over"]];
 [MarkerElement(color = (col[ρ], 0.5), marker = marker[ρ],markersize = 16) for ρ in ["VaR","VaR_over"]]]
-l = Legend(f[2, 1:2],obj_scatter,["q̲ᵈ ","q̄ᵈ ","π̲ performance","π̄ performance"],orientation = :horizontal)
+l = Legend(f[2, 1:2],obj_scatter,["q̲ᵈ ","q̄ᵈ ","ρ( π̲  )","ρ( π̄  )"],orientation = :horizontal)
 
-sideinfo = Label(f[1, 0], "Quantile value", rotation = pi/2, fontsize = 30)
+sideinfo = Label(f[1, 0], "      Quantile value      ", rotation = pi/2, fontsize = 22,font="CMU Serif")
 
 
 save(check_path("fig/mc_test_result/$domain/$T/$domain-combine-discretize.png"), f)

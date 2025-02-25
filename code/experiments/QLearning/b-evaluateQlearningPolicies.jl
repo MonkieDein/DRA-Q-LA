@@ -54,8 +54,8 @@ for (lr_setting,setting) in lr_settings
     for (domain, results) in VI_ret
         plot(title = "κ=$(lr_setting[3:end]) Q-learning ($domain)",dpi=1200, xlabel = "Quantile level", ylabel = "Quantile Value",legend=:outerright) # 
         for (ρ, result) in results
-            scatter!(result["α"],result["values"], m = :circle,ms=6, label="π̲ performance",alpha=0.5)
-            scatter!(Q_ret[domain][ρ]["α"],Q_ret[domain][ρ]["values"], m = :star4,ms=6, label="π̃ performance",alpha=0.5)
+            scatter!(result["α"],result["values"], m = :circle,ms=6, label="ρ( π̲  )",alpha=0.5)
+            scatter!(Q_ret[domain][ρ]["α"],Q_ret[domain][ρ]["values"], m = :star4,ms=6, label="ρ( π̃  )",alpha=0.5)
             xlims!(0,1)
             max_y = Base.max(maximum(result["values"]),maximum(Q_ret[domain][ρ]["values"]))
             min_y = Base.min(minimum(result["values"]),minimum(Q_ret[domain][ρ]["values"]))

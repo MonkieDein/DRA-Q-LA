@@ -43,7 +43,7 @@ for d in domains
     VI_q = getTargetVaR(init_jld("experiment/run/train/out_$T_VI.jld2"),[obj_VI],mdp_dir=mdp_dir)
     W1_distance[domain] = Dict()
     plot(title = "Q-learning vs DP ($domain)",ylabel="Wasserstein-1 Distance",xlabel ="Number of Samples",
-    titlefontsize = 22,guidefontsize = 16,legendfontsize = 14,tickfontsize=10)
+    titlefontsize = 18,guidefontsize = 16,legendfontsize = 14,tickfontsize=10)
     for (lr_setting,setting) in lr_settings
         println("$lr_setting-$domain")
         Q_out_dir = "experiment/run/train/Q_out/$lr_setting/"

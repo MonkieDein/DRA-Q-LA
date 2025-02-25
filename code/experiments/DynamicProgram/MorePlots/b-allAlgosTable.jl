@@ -41,7 +41,8 @@ output_df[!,"\$\\ushort{q}^\\discretized\$"] = round.([VaR(distribution(bound[do
 risk_name, eval_metric = ("VaR",VaR)
 ret = simplifyEvals(objs,mdp_dir=mdp_dir,testfile=testfile,eval_metric = eval_metric)
 for obj in objs
-    output_df[!,obj.ρ] = round.([ret[domain][obj.ρ]["values"][ret[domain][obj.ρ]["α"] .== eval_risk][1] for domain in domains], digits=2)
+    label=ifelse(obj.ρ=="VaR","Alg 1",ifelse(obj.ρ=="dVaR","VaR-IQN",obj.ρ))
+    output_df[!,label] = round.([ret[domain][obj.ρ]["values"][ret[domain][obj.ρ]["α"] .== eval_risk][1] for domain in domains], digits=2)
 end
 
 println("25% quantile performance")

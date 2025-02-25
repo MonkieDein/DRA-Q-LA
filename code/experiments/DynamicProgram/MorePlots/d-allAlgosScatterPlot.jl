@@ -49,7 +49,7 @@ let ind = 2
     label_y = Label(f[:, 1], "Quantile Value", rotation = pi/2, fontsize = 30)
 
     legend_scatter = [MarkerElement(color = (col[obj.ρ], 0.5), marker = marker[obj.ρ],markersize = 16) for obj in objs]
-    legend_labels = [ifelse(obj.ρ=="VaR","Alg 1",obj.ρ) for obj in objs]
+    legend_labels = [ifelse(obj.ρ=="VaR","Alg 1",ifelse(obj.ρ=="dVaR","VaR-IQN",obj.ρ)) for obj in objs]
 
     l = Legend(f[1, 1],legend_scatter,legend_labels,orientation = :vertical)
 
