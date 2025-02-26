@@ -4,7 +4,7 @@ using DataFrames
 using CSV
 
 mdp_dir = "experiment/domain/MDP/"
-csv_dir = "experiment/domain/csv2/"
+csv_dir = "experiment/domain/csv/"
 domains = readdir(mdp_dir)
 
 for d in domains
