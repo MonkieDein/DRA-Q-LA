@@ -530,12 +530,12 @@ function df2MDP(df,γ=0.95;s_init = 0)
         end
     end
 
-    (maximum(abs.(sum(P,dims=3) .- 1)) < 1e-14) || error("Transition does not sum to 1")
+    (maximum(abs.(sum(P,dims=3) .- 1)) < 1e-15) || error("Transition does not sum to 1")
     S_sa = [ [ [sn for sn in S if P[s,a,sn] > 0] for a in A ] for s in S ]
     P_sa = [ [ [P[s,a,sn] for sn in S_sa[s][a]] for a in A ] for s in S ]
     for ps in P_sa
         for psa in ps
-            (abs(sum(psa) - 1) < 1e-14) || error("Transition does not sum to 1")
+            (abs(sum(psa) - 1) < 1e-15) || error("Transition does not sum to 1")
         end
     end
     P_sample = [[Categorical(P[s,a,:]) for a in A] for s in S]
@@ -544,7 +544,7 @@ end
 
 function MDP2df(mdp::MDP)
     (any(mdp.P .< 0)) && error("Have negative transition in MDP")
-    (maximum(abs.(sum(mdp.P,dims=3) .- 1)) < 1e-14) || error("Transition does not sum to 1")
+    (maximum(abs.(sum(mdp.P,dims=3) .- 1)) < 1e-15) || error("Transition does not sum to 1")
 
     idstatefrom = []
     idaction = []
