@@ -542,9 +542,22 @@ function df2MDP(df,γ=0.95;s_init = 0)
     return MDP(S, lSl, A, lAl, R, P, γ, s0,S_sa,P_sa,P_sample, valid_A)
 end
 
-function MDP2df(mdp::MDP)
+function roundTransition(P_in,digits=15)
+    # Define high precision numbers using BigFloat
+    P = BigFloat.(P_in)
+    P = round.(P ./ sum(P,dims=3),digits=15)
+    P[argmax(P,dims=3)] .+= (1 .- sum(P,dims=3))
+    return Float64.(round.(P,digits=digits))
+end
+
+function MDP2df(mdp::MDP;normalizeTransition=false)
     (any(mdp.P .< 0)) && error("Have negative transition in MDP")
-    (maximum(abs.(sum(mdp.P,dims=3) .- 1)) < 1e-15) || error("Transition does not sum to 1")
+    if normalizeTransition
+        P = roundTransition(mdp.P)
+    else 
+        P = mdp.P
+    end
+    (maximum(abs.(sum(P,dims=3) .- 1)) < 1e-15) || error("Transition does not sum to 1")
 
     idstatefrom = []
     idaction = []
@@ -554,11 +567,11 @@ function MDP2df(mdp::MDP)
     for s in mdp.S
         for a in mdp.A
             for s_ in mdp.S
-                if (mdp.P[s,a,s_] > 0) && (mdp.R[s,a,s_] != -Inf)
+                if (P[s,a,s_] > 0) && (mdp.R[s,a,s_] != -Inf)
                     push!(idstatefrom, s)
                     push!(idaction, a)
                     push!(idstateto, s_)
-                    push!(probability, mdp.P[s,a,s_])
+                    push!(probability, P[s,a,s_])
                     push!(reward, mdp.R[s,a,s_])
                 end
             end
