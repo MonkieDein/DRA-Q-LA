@@ -55,6 +55,8 @@ Other optionals (merging plots and table)
     - *utils.jl* : Commonly used functions for checking directory, decaying coefficient function and multi-dimensions function-applicator.
     - **others/**
         - *csv2MDP.jl* : Code to convert csv MDP files to MDP objects.
+        - *MDP2csv.jl* : Code to convert MDP objects to csv MDP files.
+        - *MDPsCompare.jl* : Given two folders of MDPs check if each MDP transitions and rewards are equivalent.
     - **experiments/**
         - **DynamicProgram/**
             - *a-multipleDiscretizeExperiment.jl* : For multiple quantile discretization {16,64,256,1024,4096}, run VaR-DP-underApprox and VaR-DP-overApprox, then evaluate their respective policies.
