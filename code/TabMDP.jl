@@ -542,6 +542,33 @@ function df2MDP(df,γ=0.95;s_init = 0)
     return MDP(S, lSl, A, lAl, R, P, γ, s0,S_sa,P_sa,P_sample, valid_A)
 end
 
+function MDP2df(mdp::MDP)
+    (any(mdp.P .< 0)) && error("Have negative transition in MDP")
+    (maximum(abs.(sum(mdp.P,dims=3) .- 1)) < 1e-14) || error("Transition does not sum to 1")
+
+    idstatefrom = []
+    idaction = []
+    idstateto = []
+    probability = []
+    reward = []
+    for s in mdp.S
+        for a in mdp.A
+            for s_ in mdp.S
+                if (mdp.P[s,a,s_] > 0) && (mdp.R[s,a,s_] != -Inf)
+                    push!(idstatefrom, s)
+                    push!(idaction, a)
+                    push!(idstateto, s_)
+                    push!(probability, mdp.P[s,a,s_])
+                    push!(reward, mdp.R[s,a,s_])
+                end
+            end
+        end
+    end
+    df = DataFrame(idstatefrom=idstatefrom, idaction=idaction, idstateto=idstateto, 
+    probability=probability, reward=reward)
+    return df
+end
+
 # Define a helper function to sample from the Categorical distribution
 function sample1_from_transition(P_sample,s, a)
     return rand(P_sample[s][a])

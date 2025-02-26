@@ -272,7 +272,7 @@ Takes in an array of sorted CVaR values its respective cdf:
 returns the distribution (d).
 """
 function CVaR2D(cvar::Array, cdf::Array; decimal::Integer = 10)
-    issorted(X) ||  error("values of cvar must be sorted")
+    issorted(cvar) ||  error("values of cvar must be sorted")
     pdf = diff(cdf)
     X = CVaR2X(cvar,cdf,pdf,decimal=decimal)
     return distribution(X, pdf)
