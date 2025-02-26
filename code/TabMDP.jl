@@ -543,10 +543,12 @@ function df2MDP(df,γ=0.95;s_init = 0)
 end
 
 function roundTransition(P_in,digits=15)
+    setprecision(1024)
     # Define high precision numbers using BigFloat
     P = BigFloat.(P_in)
     P = round.(P ./ sum(P,dims=3),digits=15)
     P[argmax(P,dims=3)] .+= (1 .- sum(P,dims=3))
+    # Convert back to Float64 to ensure consistency in DataType
     return Float64.(round.(P,digits=digits))
 end
 

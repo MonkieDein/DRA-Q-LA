@@ -55,7 +55,7 @@ Other optionals (merging plots and table)
     - *utils.jl* : Commonly used functions for checking directory, decaying coefficient function and multi-dimensions function-applicator.
     - **others/**
         - *csv2MDP.jl* : Code to convert csv MDP files to MDP objects.
-        - *MDP2csv.jl* : Code to convert MDP objects to csv MDP files.
+        - *MDP2csv.jl* : Code to convert MDP objects to csv MDP files, normalizeTransition ensure transition probability sums to "One(1)".
         - *MDPsCompare.jl* : Given two folders of MDPs check if each MDP transitions and rewards are equivalent.
     - **experiments/**
         - **DynamicProgram/**
