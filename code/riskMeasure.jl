@@ -164,7 +164,7 @@ function EVaR(d::distribution, α::Array;δ::Number = 0.1,min_α = 0.01,fast_app
     min_val = min(d)
     mean_val = E(d)
     if fast_approx
-        β = 1000 * (0.999 .^ (0:20000))
+        β = 100 * (0.99 .^ (0:2000))
     else 
         max_val = max(d)
         α_min = Base.max(minimum(α[ α .> 0]),min_α)
