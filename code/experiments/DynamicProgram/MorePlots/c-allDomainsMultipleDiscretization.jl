@@ -1,6 +1,5 @@
 include("../../../utils.jl")
 using CairoMakie
-# using LaTeXStrings
 using MakieTeX
 lQls = 2 .^ [4,8,12] 
 lEQl = 10 
@@ -17,7 +16,7 @@ for (i,lQl) in enumerate(lQls)
     ret = MultiEvals["$lQl"]["ret"]
     for (j,pair) in enumerate(ret) 
         domain, results = pair
-        ax = Axis(f[j, i], title="$lQl discretization VaR ($domain)") 
+        ax = Axis(f[j, i], title="$lQl Discretization VaR ($domain)") 
         xlims!(ax,0,1)
         ax.xticks = 0:.2:1
         for (ρ, result) in results
@@ -28,7 +27,7 @@ for (i,lQl) in enumerate(lQls)
         end
     end
 end
-sideinfo2 = Label(f[8, 2:3], "Quantile level", fontsize = 30)
+sideinfo2 = Label(f[8, 2:3], "Quantile level (α)", fontsize = 30)
 obj_scatter = [[LineElement(color = (col[ρ], 0.5), lw=4) for ρ in ["VaR","VaR_over"]];
 [MarkerElement(color = (col[ρ], 0.5), marker = marker[ρ],markersize = 16) for ρ in ["VaR","VaR_over"]]]
 l = Legend(f[8, 1:2],obj_scatter,["q̲ᵈ ","q̄ᵈ ","ρ( π̲  )","ρ( π̄  )"],orientation = :horizontal)

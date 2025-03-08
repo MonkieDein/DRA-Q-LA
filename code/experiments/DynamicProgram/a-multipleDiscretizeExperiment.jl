@@ -30,14 +30,14 @@ for T in [100]
         # Monte Carlo Simulate to evaluate policy performance
         need_eval = true
         if need_eval
-            evaluations(vf,objs,ENV_NUM = 10000,T_inf=T_inf,mdp_dir=mdp_dir,testfile=testfile,seed=0)
+            evaluations(vf,objs,ENV_NUM = 100000,T_inf=T_inf,mdp_dir=mdp_dir,testfile=testfile,seed=0)
         end
 
         # Simplify and Plot the Evaluations
         bound = getTargetVaR(vf,[ VaRObj ; VaR_overObj ],mdp_dir=mdp_dir)
         ret = simplifyEvals(objs,mdp_dir=mdp_dir,testfile=testfile)
         for (domain, results) in ret
-            plot(title = ( T==-1 ? "infinite" : "$T")*" horizon policy evaluation $domain", xlabel = "Quantile level", ylabel = "Quantile Value",
+            plot(title = ( T==-1 ? "Infinite" : "$T")*" Horizon Policy Evaluation $domain", xlabel = "Quantile level (α)", ylabel = "Quantile value",
             legend=:outerright,xlim=(0,1)) # 
             for (ρ, result) in results
                 scatter!(result["α"],result["values"],ms=6, label="π"*ifelse(ρ=="VaR","̲","̄")*" performance",alpha=0.5)

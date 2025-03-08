@@ -10,7 +10,7 @@ par_hat= collect(LinRange(0, 1, lQl*2+1)[2:2:end]) # used for QRDQN methods
 parEval = collect(LinRange(0, 1, lEQl*2+1))[2:2:end]
 
 # set up discretization for mdp Q-learning evaluations
-ENV_NUM = 10000
+ENV_NUM = 100000
 seed=0
 T_inf = 100
 

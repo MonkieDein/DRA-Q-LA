@@ -9,7 +9,7 @@ pars = collect(LinRange(0, 1, lQl+1))
 parEval = collect(LinRange(0, 1, lEQl*2+1))[2:2:end]
 
 # set up parameter for mdp Q-learning evaluations
-ENV_NUM = 10000
+ENV_NUM = 100000
 seed=0
 T_inf = 100
 T = -1
@@ -52,7 +52,7 @@ for (lr_setting,setting) in lr_settings
 
     # generate plot for each domain
     for (domain, results) in VI_ret
-        plot(title = "κ=$(lr_setting[3:end]) Q-learning ($domain)",dpi=1200, xlabel = "Quantile level", ylabel = "Quantile Value",legend=:outerright) # 
+        plot(title = "κ=$(lr_setting[3:end]) Q-learning ($domain)",dpi=1200, xlabel = "Quantile level (α)", ylabel = "Quantile value",legend=:outerright) # 
         for (ρ, result) in results
             scatter!(result["α"],result["values"], m = :circle,ms=6, label="ρ( π̲  )",alpha=0.5)
             scatter!(Q_ret[domain][ρ]["α"],Q_ret[domain][ρ]["values"], m = :star4,ms=6, label="ρ( π̃  )",alpha=0.5)

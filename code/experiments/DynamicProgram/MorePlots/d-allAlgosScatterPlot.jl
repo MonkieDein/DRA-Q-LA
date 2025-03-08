@@ -34,7 +34,7 @@ let ind = 2
     f = Figure(resolution=(800,1200))
     for (domain, results) in ret
         if domain != "inventory2"
-            ax = Axis(f[(ind>>1),(ind%2+2)], title="policy evaluation $domain") 
+            ax = Axis(f[(ind>>1),(ind%2+2)], title="Policy Evaluation $domain") 
             xlims!(ax,0,1)
             ax.xticks = 0:.2:1
             for obj in objs
@@ -45,8 +45,8 @@ let ind = 2
             ind = ind + 1
         end
     end
-    label_x = Label(f[4, 2:3], "Quantile Level", fontsize = 30)
-    label_y = Label(f[:, 1], "Quantile Value", rotation = pi/2, fontsize = 30)
+    label_x = Label(f[4, 2:3], "Quantile level (α)", fontsize = 30)
+    label_y = Label(f[:, 1], "Quantile value", rotation = pi/2, fontsize = 30)
 
     legend_scatter = [MarkerElement(color = (col[obj.ρ], 0.5), marker = marker[obj.ρ],markersize = 16) for obj in objs]
     legend_labels = [ifelse(obj.ρ=="VaR","Alg 1",ifelse(obj.ρ=="dVaR","VaR-IQN",obj.ρ)) for obj in objs]

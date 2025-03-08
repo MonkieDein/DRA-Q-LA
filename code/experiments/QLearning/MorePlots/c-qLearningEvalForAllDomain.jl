@@ -10,7 +10,7 @@ par_hat= collect(LinRange(0, 1, lQl*2+1)[2:2:end]) # used for QRDQN methods
 parEval = collect(LinRange(0, 1, lEQl*2+1))[2:2:end]
 
 # set up discretization for mdp Q-learning evaluations
-ENV_NUM = 10000
+ENV_NUM = 100000
 seed=0
 T_inf = 100
 
@@ -69,7 +69,7 @@ for (i,lr_setting) in enumerate(lr_settings)
         end
     end
 end
-sideinfo2 = Label(f[8, 1:4], "Quantile level", fontsize = 30)
+sideinfo2 = Label(f[8, 1:4], "Quantile level (α)", fontsize = 30)
 sideinfo = Label(f[:, 0], "Quantile value", rotation = pi/2, fontsize = 30)
 obj_scatter = [[LineElement(color = (col[val], 0.5), lw=4) for val in ["Q","DP"]];
 [MarkerElement(color = (col[val], 0.5), marker = :circle,markersize = 16) for val in ["Q","DP"]]]

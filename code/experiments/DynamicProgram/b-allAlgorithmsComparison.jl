@@ -42,7 +42,7 @@ for T in [100]
         ret = simplifyEvals(objs,mdp_dir=mdp_dir,testfile=testfile,eval_metric = eval_metric)
         for (domain, results) in ret
             plot(title = "", xlims=(0,1), 
-            xlabel = "Quantile level", ylabel = "Quantile value",legend=:outerright,
+            xlabel = "Quantile level (α)", ylabel = "Quantile value",legend=:outerright,
             guidefontsize = 16,legendfontsize = 14,tickfontsize=11) # 
             for obj in objs
                 ρ = obj.ρ
